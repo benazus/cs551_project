@@ -21,7 +21,6 @@ color -> 480 x 640 x 3
     img = Image.open("/home/bb/BilkentUniversity/Fall2019/cs551/project/dataset/files/0-color.png").convert('LA')
 """
 
-
 # Reformat the folder structure of the dataset & rename samples with a global id
 def transfer_dataset():
     global_id = 0
@@ -38,7 +37,7 @@ def transfer_dataset():
                 os.rename(rgb, new_path + "/" + str(global_id) + "-color.png")
                 os.rename(conf, new_path + "/" + str(global_id) + "-conf.bin")
                 os.rename(depth, new_path + "/" + str(global_id) + "-depth.bin")
-                labels.write(str(global_id) + "\t" + str(gesture) + "\n")
+                labels.write(str(global_id) + "\t" + str(gesture - 1) + "\n")
                 global_id += 1
 
     labels.close()
@@ -104,4 +103,4 @@ class PatternDataset(Dataset):
         rgb = Image.fromarray(np.array(np.mean(np.asarray(Image.open(fname + "-color.png")), 1), dtype = np.float64))
         depth = Image.fromarray(np.reshape(np.array(np.fromfile(fname + "-depth.bin", dtype = np.int16), dtype = np.float64), (240, 320)))
         conf = Image.fromarray(np.reshape(np.array(np.fromfile(fname + "-conf.bin", dtype = np.int16), dtype = np.float64), (240, 320)))
-        return self.transform_rgb(rgb), self.transform_depth(depth), self.transform_conf(conf), torch.from_numpy(np.asarray(self.labels[index]))
+        return self.transform_rgb(rgb), self.transform_depth(depth), self.transform_conf(conf), torch.from_numpy(np.asarray(self.labels[index])).long()
