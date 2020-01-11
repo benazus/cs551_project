@@ -1,0 +1,11 @@
+True Positives: 18 22 5 0 1 0 0
+False Negatives: 6 2 19 24 23 24 24
+False Positives: 60 27 3 8 34 5 3
+True Negatives: 180 213 237 232 206 235 237
+Test Accuracy: 0.277
+Test Loss: 0.077
+Classwise Accuracies: 0.75 0.89 0.917 0.879 0.784 0.89 0.898
+True Positive Rates: 0.75 0.917 0.208 0.0 0.042 0.0 0.0
+True Negative Rates: 0.75 0.888 0.988 0.967 0.858 0.979 0.988
+False Positive Rates: 0.25 0.112 0.012 0.033 0.142 0.021 0.012
+False Negative Rates: 0.25 0.083 0.792 1.0 0.958 1.0 1.0
