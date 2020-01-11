@@ -47,7 +47,7 @@ for i = 1:1320
     ub = ub + scale_to(1)*scale_to(2);
     features(k, lb:ub) = reshape(C, scale_to(1)*scale_to(2), 1);
 end
-max_num_base = 100;
+max_num_base = 120;
 clear conf_images;
 clear dept_images;
 clear rgb_images;
@@ -68,13 +68,13 @@ ylabel('Cumulative variance (%)');
 label_types = unique(labels);
 
 disp('Gmm phase')
-acc_data = zeros(max_num_base/3, 10);
+acc_data = zeros(max_num_base/2, 10);
 cntr=1;
 
-for i = 1:3:max_num_base
+for i = 1:2:max_num_base
     for comp_count = 1:10
         GMModels = cell(1,length(label_types));
-        options = statset('MaxIter',1000);
+        options = statset('MaxIter',1100);
         data = score(find(labels(train_indices)==label_types(1)), 1:i);
         [n_r,n_c] = size(data);
         if (n_r<=n_c)
@@ -83,7 +83,7 @@ for i = 1:3:max_num_base
         % train gmm for each class
         for k = 1:length(label_types)
             GMModels{k} = fitgmdist(data, comp_count,...
-                'RegularizationValue', 0.01, 'CovarianceType','full', 'Options', options);
+                'RegularizationValue', 0.001, 'CovarianceType','full', 'Options', options);
         end
         
         p_test_data = features(test_indices,:) * (coeff(:, 1:i));
@@ -91,11 +91,13 @@ for i = 1:3:max_num_base
         %test accuracy
         for idx = 1:(1320-divide)
             for k = 1:10
+                %likelihoods(idx,k) = min(mahal(GMModels{k}, p_test_data(idx,:)), [], 1);
                 likelihoods(idx,k) = pdf(GMModels{k}, p_test_data(idx,:));
             end
         end
         
         [~ ,predictions] = max(likelihoods, [], 2);
+        %[~ ,predictions] = min(likelihoods, [], 2);
         
         acc_data(cntr,comp_count) = sum(predictions == labels(test_indices))/length(test_indices);
     end
